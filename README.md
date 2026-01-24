@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ticket Gen
 
-## Getting Started
+Projeto que gera senha para organizar o atendimento.
 
-First, run the development server:
+<svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" /></svg>
+
+## Descrição
+
+Este projeto consiste gerar um controle de senha para atendimento e gera um relatorio sobre o evento das senhas.
+
+## Iniciar o projeto
+
+Clone the project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+  git clone 'link do repositório'
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Install dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+  npm i
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Start LocalHost
 
-## Learn More
+```bash
+  npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Start build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+  npm run build
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+  git checkout -b 'edit type/taskName'
+```
 
-## Deploy on Vercel
+All new commit
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+  git commit -m 'edit type - commitTitle'
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Tipos de edição
+
+- **test**: indica qualquer tipo de criação ou alteração de códigos de teste. Exemplo: Criação de testes unitários.
+- **feat**: indica o desenvolvimento de uma nova feature ao projeto. Exemplo: Acréscimo de um serviço, funcionalidade, endpoint, etc.
+- **refactor**: usado quando houver uma refatoração de código que não tenha qualquer tipo de impacto na lógica/regras de negócio do sistema. Exemplo: Mudanças de código após um code review
+- **style**: empregado quando há mudanças de formatação e estilo do código que não alteram o sistema de nenhuma forma.
+Exemplo: Mudar o style-guide, mudar de convenção lint, arrumar indentações, remover espaços em brancos, remover comentários, etc..
+- **fix**: utilizado quando há correção de erros que estão gerando bugs no sistema.
+Exemplo: Aplicar tratativa para uma função que não está tendo o comportamento esperado e retornando erro.
+- **chore**: indica mudanças no projeto que não afetem o sistema ou arquivos de testes. São mudanças de desenvolvimento.
+Exemplo: Mudar regras do eslint, adicionar prettier, adicionar mais extensões de arquivos ao .gitignore
+- **docs**: usado quando há mudanças na documentação do projeto.
+Exemplo: adicionar informações na documentação da API, mudar o README, etc.
+- **build**: utilizada para indicar mudanças que afetam o processo de build do projeto ou dependências externas.
+Exemplo: Gulp, adicionar/remover dependências do npm, etc.
+- **perf**: indica uma alteração que melhorou a performance do sistema.
+Exemplo: alterar ForEach por while, melhorar a query ao banco, etc.
+- **ci**: utilizada para mudanças nos arquivos de configuração de CI.
+Exemplo: Circle, Travis, BrowserStack, etc.
+- **revert**: indica a reverão de um commit anterior.
+
+## Tecnologias
+
+- **Git**: 2.46.1
+- **NVM**: 1.1.12
+- **NodeJS**: 25.0.0
+- **NestJs**: 11.0.7
