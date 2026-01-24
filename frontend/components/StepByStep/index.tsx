@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/frontend/ui/button";
-import { Icons } from "@/frontend/utils/icons";
 import { AppState, Ticket } from "@/types";
 import { useCallback, useState } from "react";
 import { TicketCard } from "../TicketCard";
+import { Icons } from "@/frontend/ui/icons";
 
 export const StepByStep = () => {
     const [appState, setAppState] = useState<AppState>(AppState.SETUP);
