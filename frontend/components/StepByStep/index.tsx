@@ -5,6 +5,8 @@ import { AppState, Ticket, SessionMode, CategoryCount } from "@/types";
 import { useCallback, useState } from "react";
 import { TicketCard } from "../TicketCard";
 import { Icons } from "@/frontend/ui/icons";
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver";
 
 export const StepByStep = () => {
     const [appState, setAppState] = useState<AppState>(AppState.SETUP);
@@ -62,40 +64,83 @@ export const StepByStep = () => {
         setSessionMode(SessionMode.TICKETS);
     };
 
-    const exportCSV = useCallback(() => {
+    const exportExcel = useCallback(async () => {
         if (!startTime) return;
-      
-        let csv = "data:text/csv;charset=utf-8,";
-      
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Relatório');
+
         const reportTitle = sessionMode === SessionMode.TICKETS ? "Relatório de Senhas" : "Relatório de Contagem por Categoria";
-        csv += `${reportTitle}\n`;
-        csv += `Atendente,${userName}\n`;
-        csv += `Evento,${eventName}\n`;
-        csv += `Data de Início,${startTime.toLocaleString('pt-BR')}\n`;
-        
+
+        // Style the title
+        worksheet.mergeCells('A1:B1');
+        const titleCell = worksheet.getCell('A1');
+        titleCell.value = reportTitle;
+        titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: 'FFFFFFFF' } };
+        titleCell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FF4F46E5' } // Indigo-600
+        };
+        titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
+
+        // Add info rows
+        worksheet.addRow(['Atendente', userName]);
+        worksheet.addRow(['Evento', eventName]);
+        worksheet.addRow(['Data de Início', startTime.toLocaleString('pt-BR')]);
+
         if (sessionMode === SessionMode.TICKETS) {
-            csv += `Total de Senhas,${tickets.length}\n\n`;
-            csv += `Numero da Senha,Horario\n`;
+            worksheet.addRow(['Total de Senhas', tickets.length]);
+            worksheet.addRow([]); // Spacer
+            
+            const headerRow = worksheet.addRow(['Número da Senha', 'Horário']);
+            headerRow.font = { bold: true };
+            headerRow.eachCell((cell) => {
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FFF1F5F9' } // Slate-100
+                };
+                cell.border = {
+                    bottom: { style: 'thin' }
+                };
+            });
+
             tickets.forEach(t => {
-                csv += `${t.number},${t.timestamp.toLocaleTimeString('pt-BR')}\n`;
+                worksheet.addRow([t.number, t.timestamp.toLocaleTimeString('pt-BR')]);
             });
         } else {
             const totalCount = categories.reduce((acc, cat) => acc + cat.count, 0);
-            csv += `Total de Atendimentos,${totalCount}\n\n`;
-            csv += `Categoria,Quantidade\n`;
+            worksheet.addRow(['Total de Atendimentos', totalCount]);
+            worksheet.addRow([]); // Spacer
+
+            const headerRow = worksheet.addRow(['Categoria', 'Quantidade']);
+            headerRow.font = { bold: true };
+            headerRow.eachCell((cell) => {
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FFF1F5F9' } // Slate-100
+                };
+                cell.border = {
+                    bottom: { style: 'thin' }
+                };
+            });
+
             categories.forEach(cat => {
-                csv += `${cat.name},${cat.count}\n`;
+                worksheet.addRow([cat.name, cat.count]);
             });
         }
-      
-        const encodedUri = encodeURI(csv);
-        const link = document.createElement("a");
-        link.href = encodedUri;
+
+        // Auto-fit columns
+        worksheet.columns.forEach(column => {
+            column.width = 25;
+        });
+
+        const buffer = await workbook.xlsx.writeBuffer();
         const fileName = sessionMode === SessionMode.TICKETS ? "relatorio_senhas" : "relatorio_contagem";
-        link.download = `${fileName}_${eventName.replace(/\s+/g, '_')}.csv`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, `${fileName}_${eventName.replace(/\s+/g, '_')}.xlsx`);
     }, [userName, eventName, startTime, tickets, categories, sessionMode]);
 
     const latestTicket = tickets[0];
@@ -353,8 +398,8 @@ export const StepByStep = () => {
                     )}
 
                     <div className="space-y-4">
-                        <Button fullWidth size="lg" variant="secondary" onClick={exportCSV}>
-                            <Icons.Download /> Baixar Relatório (CSV)
+                        <Button fullWidth size="lg" variant="secondary" onClick={exportExcel}>
+                            <Icons.Download /> Baixar Relatório (Excel)
                         </Button>
                         <Button fullWidth size="lg" variant="outline" onClick={restart}>
                             Nova Sessão
