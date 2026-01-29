@@ -10,13 +10,13 @@ import { saveAs } from "file-saver";
 
 export const StepByStep = () => {
     const [appState, setAppState] = useState<AppState>(AppState.SETUP);
-    const [userName, setUserName] = useState('');
-    const [eventName, setEventName] = useState('');
+    const [userName, setUserName] = useState("");
+    const [eventName, setEventName] = useState("");
     const [tickets, setTickets] = useState<Ticket[]>([]);
     const [startTime, setStartTime] = useState<Date | null>(null);
     const [sessionMode, setSessionMode] = useState<SessionMode>(SessionMode.TICKETS);
     const [categories, setCategories] = useState<CategoryCount[]>([]);
-    const [newCategoryName, setNewCategoryName] = useState('');
+    const [newCategoryName, setNewCategoryName] = useState("");
 
     const startSession = (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,7 +28,7 @@ export const StepByStep = () => {
     const addCategory = () => {
         if (!newCategoryName.trim()) return;
         setCategories(prev => [...prev, { name: newCategoryName.trim(), count: 0 }]);
-        setNewCategoryName('');
+        setNewCategoryName("");
     };
 
     const removeCategory = (index: number) => {
@@ -55,8 +55,8 @@ export const StepByStep = () => {
     };
 
     const restart = () => {
-        setUserName('');
-        setEventName('');
+        setUserName("");
+        setEventName("");
         setTickets([]);
         setCategories([]);
         setStartTime(null);
@@ -68,62 +68,62 @@ export const StepByStep = () => {
         if (!startTime) return;
 
         const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Relatório');
+        const worksheet = workbook.addWorksheet("Relatório");
 
         const reportTitle = sessionMode === SessionMode.TICKETS ? "Relatório de Senhas" : "Relatório de Contagem por Categoria";
 
         // Style the title
-        worksheet.mergeCells('A1:B1');
-        const titleCell = worksheet.getCell('A1');
+        worksheet.mergeCells("A1:B1");
+        const titleCell = worksheet.getCell("A1");
         titleCell.value = reportTitle;
-        titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: 'FFFFFFFF' } };
+        titleCell.font = { name: "Arial", size: 16, bold: true, color: { argb: "FFFFFFFF" } };
         titleCell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'FF4F46E5' } // Indigo-600
+            type: "pattern",
+            pattern: "solid",
+            fgColor: { argb: "FF4F46E5" } // Indigo-600
         };
-        titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
+        titleCell.alignment = { vertical: "middle", horizontal: "center" };
 
         // Add info rows
-        worksheet.addRow(['Atendente', userName]);
-        worksheet.addRow(['Evento', eventName]);
-        worksheet.addRow(['Data de Início', startTime.toLocaleString('pt-BR')]);
+        worksheet.addRow(["Atendente", userName]);
+        worksheet.addRow(["Evento", eventName]);
+        worksheet.addRow(["Data de Início", startTime.toLocaleString("pt-BR")]);
 
         if (sessionMode === SessionMode.TICKETS) {
-            worksheet.addRow(['Total de Senhas', tickets.length]);
+            worksheet.addRow(["Total de Senhas", tickets.length]);
             worksheet.addRow([]); // Spacer
             
-            const headerRow = worksheet.addRow(['Número da Senha', 'Horário']);
+            const headerRow = worksheet.addRow(["Número da Senha", "Horário"]);
             headerRow.font = { bold: true };
             headerRow.eachCell((cell) => {
                 cell.fill = {
-                    type: 'pattern',
-                    pattern: 'solid',
-                    fgColor: { argb: 'FFF1F5F9' } // Slate-100
+                    type: "pattern",
+                    pattern: "solid",
+                    fgColor: { argb: "FFF1F5F9" } // Slate-100
                 };
                 cell.border = {
-                    bottom: { style: 'thin' }
+                    bottom: { style: "thin" }
                 };
             });
 
             tickets.forEach(t => {
-                worksheet.addRow([t.number, t.timestamp.toLocaleTimeString('pt-BR')]);
+                worksheet.addRow([t.number, t.timestamp.toLocaleTimeString("pt-BR")]);
             });
         } else {
             const totalCount = categories.reduce((acc, cat) => acc + cat.count, 0);
-            worksheet.addRow(['Total de Atendimentos', totalCount]);
+            worksheet.addRow(["Total de Atendimentos", totalCount]);
             worksheet.addRow([]); // Spacer
 
-            const headerRow = worksheet.addRow(['Categoria', 'Quantidade']);
+            const headerRow = worksheet.addRow(["Categoria", "Quantidade"]);
             headerRow.font = { bold: true };
             headerRow.eachCell((cell) => {
                 cell.fill = {
-                    type: 'pattern',
-                    pattern: 'solid',
-                    fgColor: { argb: 'FFF1F5F9' } // Slate-100
+                    type: "pattern",
+                    pattern: "solid",
+                    fgColor: { argb: "FFF1F5F9" } // Slate-100
                 };
                 cell.border = {
-                    bottom: { style: 'thin' }
+                    bottom: { style: "thin" }
                 };
             });
 
@@ -139,8 +139,8 @@ export const StepByStep = () => {
 
         const buffer = await workbook.xlsx.writeBuffer();
         const fileName = sessionMode === SessionMode.TICKETS ? "relatorio_senhas" : "relatorio_contagem";
-        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        saveAs(blob, `${fileName}_${eventName.replace(/\s+/g, '_')}.xlsx`);
+        const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+        saveAs(blob, `${fileName}_${eventName.replace(/\s+/g, "_")}.xlsx`);
     }, [userName, eventName, startTime, tickets, categories, sessionMode]);
 
     const latestTicket = tickets[0];
@@ -155,14 +155,14 @@ export const StepByStep = () => {
                             <button
                                 type="button"
                                 onClick={() => setSessionMode(SessionMode.TICKETS)}
-                                className={`py-3 px-4 rounded-xl text-sm font-bold transition-all ${sessionMode === SessionMode.TICKETS ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                className={`py-3 px-4 rounded-xl text-sm font-bold transition-all ${sessionMode === SessionMode.TICKETS ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
                             >
                                 Gerar Senhas
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setSessionMode(SessionMode.CATEGORIES)}
-                                className={`py-3 px-4 rounded-xl text-sm font-bold transition-all ${sessionMode === SessionMode.CATEGORIES ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+                                className={`py-3 px-4 rounded-xl text-sm font-bold transition-all ${sessionMode === SessionMode.CATEGORIES ? "bg-white text-indigo-600 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
                             >
                                 Contador por Categoria
                             </button>
@@ -277,8 +277,8 @@ export const StepByStep = () => {
                                     <div className="divide-y divide-slate-50">
                                         {tickets.slice(1, 5).map((t, idx) => (
                                             <div key={idx} className="flex justify-between items-center py-3">
-                                                <span className="font-black text-slate-400">#{t.number.toString().padStart(3, '0')}</span>
-                                                <span className="text-sm text-slate-400">{t.timestamp.toLocaleTimeString('pt-BR')}</span>
+                                                <span className="font-black text-slate-400">#{t.number.toString().padStart(3, "0")}</span>
+                                                <span className="text-sm text-slate-400">{t.timestamp.toLocaleTimeString("pt-BR")}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -301,7 +301,7 @@ export const StepByStep = () => {
                                         value={newCategoryName}
                                         onChange={(e) => setNewCategoryName(e.target.value)}
                                         onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
+                                            if (e.key === "Enter") {
                                                 e.preventDefault();
                                                 addCategory();
                                             }
@@ -378,7 +378,7 @@ export const StepByStep = () => {
                         <div>
                             <p className="text-xs uppercase font-bold text-slate-400 tracking-wider mb-1">Duração</p>
                             <p className="text-2xl font-black text-slate-800">
-                                {startTime ? `${Math.floor((new Date().getTime() - startTime.getTime()) / 60000)} min` : '-'}
+                                {startTime ? `${Math.floor((new Date().getTime() - startTime.getTime()) / 60000)} min` : "-"}
                             </p>
                         </div>
                     </div>

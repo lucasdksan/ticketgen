@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Users {
+  id                   Int       @id @default(autoincrement())
+  email                String
+  name                 String
+  password             String
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+  eventTemplates       EventTemplate[]
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @default(now())
+
+  @@map("users")
+}
+
+model Category {
+  id              Int           @id @default(autoincrement())
+  name            String
+  count           Int
+  eventTemplateId Int
+  eventTemplate   EventTemplate @relation(fields: [eventTemplateId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @default(now())
+
+  @@map("category")
+}
+
+model EventTemplate {
+  id         Int        @id @default(autoincrement())
+  name       String
+  attendant  String
+  userId     Int
+  user       Users      @relation(fields: [userId], references: [id])
+  categories Category[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @default(now())
+
+  @@map("eventTemplate")
+}
